@@ -19,6 +19,7 @@ export class KpiTreeComponent implements OnInit {
     lines = [];
     offset = 75;
     offsetTop = 700;
+    maxDepth = -1;
 
     @Input()
     treeId: string;
@@ -32,7 +33,7 @@ export class KpiTreeComponent implements OnInit {
             .subscribe(response => {
                 this.kpiTree = response.kpiTree;
 
-                this.initKpiTreeRecursive(this.kpiTree);
+                this.initKpiTreeRecursive();
             });
     }
 
@@ -41,26 +42,33 @@ export class KpiTreeComponent implements OnInit {
 
         this.addKpiChildren(kpiClick.innerText);
 
-        // clean current tree
+        this.removeKpiTree();
+
+        this.initKpiTreeRecursive();
+    }
+
+    removeKpiTree() {
         const treeDiv = document.getElementById('kpitree');
         treeDiv.innerHTML = '';
+
         for (const line of this.lines) {
             line.remove();
         }
         this.lines = [];
-
-        this.initKpiTreeRecursive(this.kpiTree);
     }
 
-    initKpiTreeRecursive(kpiTree: KpiTree) {
+    initKpiTreeRecursive() {
         const nest = (items, uid = null, link = 'parentId') =>
             items
                 .filter(item => item[link] === uid)
                 .map(item => ({...item, children: nest(items, item.uid)}));
 
-        this.kpiTreeRecursive = nest(kpiTree.kpi);
+        this.kpiTreeRecursive = nest(this.kpiTree.kpi);
+        this.maxDepth = parseInt((document.getElementById('maxDepth') as HTMLInputElement).value);
 
-        this.drawTree(this.kpiTreeRecursive);
+        this.removeKpiTree();
+
+        this.drawTree(this.kpiTreeRecursive, this.maxDepth);
     }
 
     addKpiChildren(parentUid: string) {
@@ -81,15 +89,18 @@ export class KpiTreeComponent implements OnInit {
         this.kpiTree.kpi.push(child1, child2);
     }
 
-    drawTree(tree: KpiRecursive[]) {
+    drawTree(tree: KpiRecursive[], maxDepth: number) {
         console.log(this.kpiTreeRecursive);
 
-        this.drawTreeLeaf(tree[0], tree[0], 0, this.offsetTop);
+        this.drawTreeLeaf(tree[0], tree[0], 0, maxDepth, this.offsetTop);
     }
 
-    drawTreeLeaf(leaf: KpiRecursive, root: KpiRecursive, index: number, topOffset: number) {
-        console.log(index, leaf.uid, leaf.title);
-        this.drawTreeLeafKpi(leaf, root, index, topOffset + leaf.offsetTop);
+    drawTreeLeaf(leaf: KpiRecursive, root: KpiRecursive, depth: number, maxDepth: number, topOffset: number) {
+
+        console.log(depth, leaf.uid, leaf.title);
+        this.drawTreeLeafKpi(leaf, root, depth, topOffset + leaf.offsetTop);
+
+        if (maxDepth != -1 && depth > maxDepth) return;
 
         if (leaf.children != null) {
             let topOffsetNew = topOffset - ((leaf.children.length - 1) * this.offset / 2);
@@ -99,7 +110,7 @@ export class KpiTreeComponent implements OnInit {
             });
 
             for (const item of leaf.children) {
-                this.drawTreeLeaf(item, root, index + 1, topOffsetNew + leaf.offsetTop);
+                this.drawTreeLeaf(item, root, depth + 1, maxDepth,topOffsetNew + leaf.offsetTop);
                 topOffsetNew += this.offset;
 
                 this.lines.push(new LeaderLine(
