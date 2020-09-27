@@ -5,11 +5,13 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {IndexComponent} from './index/index.component';
 import {HttpClientModule} from '@angular/common/http';
+import { KpiTreeComponent } from './kpi-tree/kpi-tree.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        IndexComponent
+        IndexComponent,
+        KpiTreeComponent
     ],
     imports: [
         BrowserModule,

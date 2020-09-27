@@ -1,2 +1,5 @@
-<div id="kpitree">
+<div class="jumbotron" *ngIf="treeId">
+    <div class="trees">
+        <app-kpi-tree [treeId]="treeId"></app-kpi-tree>
+    </div>
 </div>
