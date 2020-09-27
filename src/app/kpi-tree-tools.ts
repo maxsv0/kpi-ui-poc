@@ -1,3 +1,4 @@
+
 export function highlightPathToRoot(element: HTMLElement) {
     highlightKpi(element);
 
@@ -22,12 +23,19 @@ export function highlightResetPathToRoot(element: HTMLElement) {
     }
 }
 
-export function highlightKpi(element: HTMLElement) {
+export function getRandomUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function highlightKpi(element: HTMLElement) {
     element.classList.remove('alert-primary');
     element.classList.add('alert-warning');
 }
 
-export function highlightKpiReset(element: HTMLElement) {
+function highlightKpiReset(element: HTMLElement) {
     element.classList.remove('alert-warning');
     element.classList.add('alert-primary');
 }

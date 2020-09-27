@@ -1,8 +1,9 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {KpiRecursive} from "../model/kpi-recursive";
-import {highlightPathToRoot, highlightResetPathToRoot} from "../kpi-tree-tools";
+import {getRandomUUID, highlightPathToRoot, highlightResetPathToRoot} from "../kpi-tree-tools";
 import {KpiService} from "../service/kpi.service";
 import {KpiTree} from "../model/kpi-tree";
+import {Kpi} from "../model/kpi";
 
 declare let LeaderLine: any;
 
@@ -14,8 +15,10 @@ declare let LeaderLine: any;
 })
 export class KpiTreeComponent implements OnInit {
     kpiTree: KpiTree;
+    kpiTreeRecursive: KpiRecursive[];
     lines = [];
     offset = 75;
+    offsetTop = 700;
 
     @Input()
     treeId: string;
@@ -29,27 +32,63 @@ export class KpiTreeComponent implements OnInit {
             .subscribe(response => {
                 this.kpiTree = response.kpiTree;
 
-                console.log(this.kpiTree);
-
-                const nest = (items, uid = null, link = 'parentId') =>
-                    items
-                        .filter(item => item[link] === uid)
-                        .map(item => ({...item, children: nest(items, item.uid)}));
-
-                const myTree = nest(this.kpiTree.kpi);
-
-                console.log(myTree);
-
-                this.drawTree(myTree);
+                this.initKpiTreeRecursive(this.kpiTree);
             });
     }
 
+    addKpi() {
+        const kpiClick = document.getElementById('kpi-click');
+
+        this.addKpiChildren(kpiClick.innerText);
+
+        // clean current tree
+        const treeDiv = document.getElementById('kpitree');
+        treeDiv.innerHTML = '';
+        for (const line of this.lines) {
+            line.remove();
+        }
+        this.lines = [];
+
+        this.initKpiTreeRecursive(this.kpiTree);
+    }
+
+    initKpiTreeRecursive(kpiTree: KpiTree) {
+        const nest = (items, uid = null, link = 'parentId') =>
+            items
+                .filter(item => item[link] === uid)
+                .map(item => ({...item, children: nest(items, item.uid)}));
+
+        this.kpiTreeRecursive = nest(kpiTree.kpi);
+
+        this.drawTree(this.kpiTreeRecursive);
+    }
+
+    addKpiChildren(parentUid: string) {
+        let child1 = new Kpi();
+        child1.orderId = 1;
+        child1.title = 'Next Level KPI 1';
+        child1.parentId = parentUid;
+        child1.style = 'alert alert-primary';
+        child1.uid = getRandomUUID();
+
+        let child2 = new Kpi();
+        child2.orderId = 2;
+        child2.title = 'Next Level KPI 2';
+        child2.parentId = parentUid;
+        child2.style = 'alert alert-primary';
+        child2.uid = getRandomUUID();
+
+        this.kpiTree.kpi.push(child1, child2);
+    }
+
     drawTree(tree: KpiRecursive[]) {
-        this.drawTreeLeaf(tree[0], tree[0], 0, 700);
+        console.log(this.kpiTreeRecursive);
+
+        this.drawTreeLeaf(tree[0], tree[0], 0, this.offsetTop);
     }
 
     drawTreeLeaf(leaf: KpiRecursive, root: KpiRecursive, index: number, topOffset: number) {
-        console.log(index, leaf.uid);
+        console.log(index, leaf.uid, leaf.title);
         this.drawTreeLeafKpi(leaf, root, index, topOffset + leaf.offsetTop);
 
         if (leaf.children != null) {
@@ -63,11 +102,11 @@ export class KpiTreeComponent implements OnInit {
                 this.drawTreeLeaf(item, root, index + 1, topOffsetNew + leaf.offsetTop);
                 topOffsetNew += this.offset;
 
-                this.lines[item.uid] = new LeaderLine(
+                this.lines.push(new LeaderLine(
                     document.getElementById('kpi-' + leaf.uid),
                     document.getElementById('kpi-' + item.uid),
                     {color: '#639dd7', size: 2}
-                );
+                ));
             }
         }
     }
@@ -84,12 +123,13 @@ export class KpiTreeComponent implements OnInit {
         div.setAttribute('data-id', leaf.uid);
         div.setAttribute('data-parent-id', leaf.parentId);
 
-        div.addEventListener('mouseover', this.kpiClickListener);
+        div.addEventListener('mouseover', this.kpiMouseOverListener);
+        div.addEventListener('click', this.kpiClickListener);
 
         tree.appendChild(div);
     }
 
-    kpiClickListener(event) {
+    kpiMouseOverListener(event) {
         const thisDiv = event.target;
 
         const tree = document.getElementById('kpitree');
@@ -106,5 +146,17 @@ export class KpiTreeComponent implements OnInit {
         highlightPathToRoot(div);
 
         tree.setAttribute('data-active-id', thisDiv.id);
+    }
+
+    kpiClickListener(event) {
+        const thisDiv = event.target;
+
+        const tree = document.getElementById('kpitree');
+        if (tree.dataset.activeId != null) {
+            const divActive = document.getElementById(tree.dataset.activeId);
+
+            const kpiClick = document.getElementById('kpi-click');
+            kpiClick.innerText = divActive.dataset.id;
+        }
     }
 }

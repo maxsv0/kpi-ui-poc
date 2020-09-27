@@ -12,9 +12,12 @@
   padding: 5px;
   z-index: 100;
   cursor: pointer;
+  box-shadow: 1px 1px #bebebe;
 }
 
 .kpi-active {
-  background: #ffe0d0 !important;
+  box-shadow: 2px 2px #a80000;
+  font-weight: bold;
+  padding: 4px;
 }
 
