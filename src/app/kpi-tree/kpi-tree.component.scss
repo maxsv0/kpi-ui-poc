@@ -1,7 +1,3 @@
-.kpitree {
-  position: relative;
-  height: 600px;
-}
 
 .kpi {
   width: 175px;
@@ -16,6 +12,16 @@
 .kpi-active {
   box-shadow: 2px 2px #a80000;
   font-weight: bold;
-  padding: 4px;
+  padding: 5px 2px;
+}
+
+.kpi-control {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+}
+
+.kpi-edited {
+  background: #b2f5ac !important;
 }
 
