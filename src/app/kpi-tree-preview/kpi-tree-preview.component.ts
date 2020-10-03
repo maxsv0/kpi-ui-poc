@@ -1,6 +1,5 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {KpiTree} from "../model/kpi-tree";
-import {KpiService} from "../service/kpi.service";
 import {Kpi} from "../model/kpi";
 import {
     editEndListener,
@@ -22,7 +21,6 @@ let kpiTreeConfig = new KpiTreeConfig();
     encapsulation: ViewEncapsulation.None
 })
 export class KpiTreePreviewComponent implements OnInit {
-    kpiTree: KpiTree;
 
     lines = [];
     offset = 75;
@@ -30,20 +28,28 @@ export class KpiTreePreviewComponent implements OnInit {
     offsetLeft = 250;
     maxDepth = -1;
 
-    @Input()
-    treeId: string;
+    @Input("kpiTree") kpiTree: KpiTree;
 
-    constructor(private kpiService: KpiService) {
+    constructor() {
+
     }
 
     ngOnInit() {
-        this.kpiService.getKpiTree(this.treeId)
-            .subscribe(response => {
-                this.kpiTree = response.kpiTree;
-                kpiTreeConfig.kpiTree = this.kpiTree;
+        console.log('input tree=' + this.kpiTree);
 
-                this.initKpiTreeRecursive();
-            });
+        kpiTreeConfig.kpiTree = this.kpiTree;
+
+        this.initKpiTreeRecursive();
+
+        //
+        //
+        // this.kpiService.getKpiTree(this.treeId)
+        //     .subscribe(response => {
+        //         this.kpiTree = response.kpiTree;
+        //         kpiTreeConfig.kpiTree = this.kpiTree;
+        //
+        //         this.initKpiTreeRecursive();
+        //     });
     }
 
     addKpi() {

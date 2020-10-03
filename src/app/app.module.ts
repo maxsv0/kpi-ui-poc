@@ -9,6 +9,7 @@ import {HomeComponent} from './home/home.component';
 import {KpiTreeComponent} from './kpi-tree/kpi-tree.component';
 import {KpiTreePreviewComponent} from './kpi-tree-preview/kpi-tree-preview.component';
 import {AuthService} from "./service/auth.service";
+import { KpiTreesComponent } from './kpi-trees/kpi-trees.component';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import {AuthService} from "./service/auth.service";
         IndexComponent,
         KpiTreeComponent,
         HomeComponent,
-        KpiTreePreviewComponent
+        KpiTreePreviewComponent,
+        KpiTreesComponent
     ],
     imports: [
         BrowserModule,
