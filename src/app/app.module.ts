@@ -8,6 +8,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {HomeComponent} from './home/home.component';
 import {KpiTreeComponent} from './kpi-tree/kpi-tree.component';
 import {KpiTreePreviewComponent} from './kpi-tree-preview/kpi-tree-preview.component';
+import {AuthService} from "./service/auth.service";
 
 @NgModule({
     declarations: [
@@ -22,7 +23,7 @@ import {KpiTreePreviewComponent} from './kpi-tree-preview/kpi-tree-preview.compo
         AppRoutingModule,
         HttpClientModule
     ],
-    providers: [],
+    providers: [AuthService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
