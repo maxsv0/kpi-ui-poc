@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {KpiTree} from "../model/kpi-tree";
 import {Kpi} from "../model/kpi";
 import {
@@ -20,7 +20,7 @@ let kpiTreeConfig = new KpiTreeConfig();
     styleUrls: ['./kpi-tree-preview.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class KpiTreePreviewComponent implements OnInit {
+export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
     lines = [];
     offset = 75;
@@ -34,22 +34,16 @@ export class KpiTreePreviewComponent implements OnInit {
 
     }
 
+    ngOnDestroy() {
+        this.removeKpiTree();
+    }
+
     ngOnInit() {
         console.log('input tree=' + this.kpiTree);
 
         kpiTreeConfig.kpiTree = this.kpiTree;
 
         this.initKpiTreeRecursive();
-
-        //
-        //
-        // this.kpiService.getKpiTree(this.treeId)
-        //     .subscribe(response => {
-        //         this.kpiTree = response.kpiTree;
-        //         kpiTreeConfig.kpiTree = this.kpiTree;
-        //
-        //         this.initKpiTreeRecursive();
-        //     });
     }
 
     addKpi() {
@@ -89,7 +83,9 @@ export class KpiTreePreviewComponent implements OnInit {
 
     removeKpiTree() {
         const treeDiv = document.getElementById('kpitree');
-        treeDiv.innerHTML = '';
+        if (treeDiv) {
+            treeDiv.innerHTML = '';
+        }
 
         for (const line of this.lines) {
             line.remove();
