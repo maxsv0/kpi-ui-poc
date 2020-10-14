@@ -10,6 +10,8 @@ import {KpiTreeComponent} from './kpi-tree/kpi-tree.component';
 import {KpiTreePreviewComponent} from './kpi-tree-preview/kpi-tree-preview.component';
 import {KpiTreesComponent} from './kpi-trees/kpi-trees.component';
 import {AuthService} from "./service/auth.service";
+import {BsDropdownModule} from "ngx-bootstrap/dropdown";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
     declarations: [
@@ -23,7 +25,9 @@ import {AuthService} from "./service/auth.service";
     imports: [
         BrowserModule,
         AppRoutingModule,
-        HttpClientModule
+        HttpClientModule,
+        BrowserAnimationsModule,
+        BsDropdownModule.forRoot()
     ],
     providers: [AuthService],
     bootstrap: [AppComponent]
