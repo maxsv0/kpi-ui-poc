@@ -19,6 +19,8 @@
     "@angular/platform-browser": "~10.1.4",
     "@angular/platform-browser-dynamic": "~10.1.4",
     "@angular/router": "~10.1.4",
+    "bootstrap-icons": "^1.1.0",
+    "firebase": "^8.0.0",
     "leader-line": "^1.0.5",
     "ngx-bootstrap": "^6.1.0",
     "rxjs": "~6.6.3",

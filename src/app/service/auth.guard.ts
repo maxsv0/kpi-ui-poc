@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
         if (this.auth.isLogged()) {
             return true;
         }
-        window.alert('You don\'t have permission to view this page');
+        
         return false;
     }
 

@@ -1,25 +1,33 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">DashKPI</a>
+    <a class="navbar-brand" routerLink="''">DashKPI</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExample03">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="/trees">KPI Tree Catalog</a>
+                <a class="nav-link" routerLink="trees">Public KPI Tree Catalog</a>
+            </li>
+            <li class="nav-item" *ngIf="this.authService.isLogged() === true">
+                <a class="nav-link" routerLink="my-trees">My KPI Trees</a>
             </li>
         </ul>
-        <ul class="navbar-nav ml-auto">
+        <span></span>
+        <button *ngIf="this.authService.isLogged() === false" (click)="authService.signinWithGoogle()" class="btn btn-primary">Sign in with Google</button>
+        <ul class="navbar-nav ml-auto" *ngIf="this.authService.isLogged() === true">
             <li class="nav-item dropdown" dropdown>
                 <a class="nav-link dropdown-toggle waves-effect waves-light" dropdownToggle  id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <i class="fas fa-user"></i> Profile </a>
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="position: relative; top: 2px; left: -2px">
+                        <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                        <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                      </svg>
+                    {{ authService.getCurrentUser().displayName }}
+                </a>
                 <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-                    <a class="dropdown-item waves-effect waves-light" href="/home">My account</a>
-                    <a class="dropdown-item waves-effect waves-light" href="#">Log out</a>
+                    <a class="dropdown-item waves-effect waves-light" routerLink="my-trees">My KPI Trees</a>
+                    <a class="dropdown-item waves-effect waves-light" (click)="this.authService.signOut()">Log out</a>
                 </div>
             </li>
         </ul>

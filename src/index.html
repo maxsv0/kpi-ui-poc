@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Treetest</title>
+    <title>DashKPI Board</title>
     <base href="/">
 
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -11,5 +11,27 @@
 </head>
 <body>
 <app-root></app-root>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDO02NMeKx4PgXSot5S5Qd6Q-fNieWMIRc",
+    authDomain: "dashkpi-9b6fa.firebaseapp.com",
+    databaseURL: "https://dashkpi-9b6fa.firebaseio.com",
+    projectId: "dashkpi-9b6fa",
+    storageBucket: "dashkpi-9b6fa.appspot.com",
+    messagingSenderId: "517650809711",
+    appId: "1:517650809711:web:87dc5ed529559cfade9e9a",
+    measurementId: "G-EFTFCWTS0H"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.auth();
+  </script>
 </body>
 </html>

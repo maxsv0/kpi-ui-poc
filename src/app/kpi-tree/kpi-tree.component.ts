@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {KpiService} from "../service/kpi.service";
 import {KpiTree} from "../model/kpi-tree";
@@ -10,6 +10,7 @@ import {KpiTree} from "../model/kpi-tree";
 })
 
 export class KpiTreeComponent implements OnInit {
+    @Input() isReadOnly: boolean = true;
 
     kpiTree: KpiTree;
 

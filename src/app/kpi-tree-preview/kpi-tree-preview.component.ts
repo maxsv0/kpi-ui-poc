@@ -29,6 +29,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     maxDepth = -1;
 
     @Input("kpiTree") kpiTree: KpiTree;
+    @Input("isReadOnly") isReadOnly: boolean;
 
     constructor() {
 
@@ -39,7 +40,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('input tree=' + this.kpiTree);
+        console.log('input tree=', this.kpiTree);
 
         kpiTreeConfig.kpiTree = this.kpiTree;
 
@@ -101,7 +102,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         kpiTreeConfig.kpiTreeRecursive = nest(kpiTreeConfig.kpiTree.kpi);
 
-        this.maxDepth = parseInt((document.getElementById('maxDepth') as HTMLInputElement).value);
+        // this.maxDepth = parseInt((document.getElementById('maxDepth') as HTMLInputElement).value);
 
         this.removeKpiTree();
 
@@ -227,6 +228,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
                 textarea.value = content;
                 textarea.setAttribute('data-id', thisDiv.dataset.id);
                 textarea.addEventListener('change', editEndListener);
+                textarea.setAttribute('class', 'active-textarea');
 
                 div.append(textarea);
             }
