@@ -1,6 +1,6 @@
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {KpiTree} from "../model/kpi-tree";
-import {Kpi} from "../model/kpi";
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { KpiTree } from "../model/kpi-tree";
+import { Kpi } from "../model/kpi";
 import {
     editEndListener,
     getRandomUUID,
@@ -8,7 +8,7 @@ import {
     highlightResetPathToRootByUid,
     KpiTreeConfig
 } from "../kpi-tree-tools";
-import {KpiRecursive} from "../model/kpi-recursive";
+import { KpiRecursive } from "../model/kpi-recursive";
 
 declare let LeaderLine: any;
 
@@ -29,7 +29,9 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     maxDepth = -1;
 
     @Input("kpiTree") kpiTree: KpiTree;
-    @Input("isReadOnly") isReadOnly: boolean;
+    @Input("isReadOnly") isReadOnly: boolean = false;
+    @Input("hasNoTitle") hasNoTitle: boolean = false;
+    public showTitle: boolean = false;
 
     constructor() {
 
@@ -43,6 +45,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         console.log('input tree=', this.kpiTree);
 
         kpiTreeConfig.kpiTree = this.kpiTree;
+        this.showTitle = this.kpiTree && !this.hasNoTitle;
 
         this.initKpiTreeRecursive();
     }
@@ -98,7 +101,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         const nest = (items, uid = null, link = 'parentId') =>
             items
                 .filter(item => item[link] === uid)
-                .map(item => ({...item, children: nest(items, item.uid)}));
+                .map(item => ({ ...item, children: nest(items, item.uid) }));
 
         kpiTreeConfig.kpiTreeRecursive = nest(kpiTreeConfig.kpiTree.kpi);
 
@@ -156,7 +159,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
                 this.lines.push(new LeaderLine(
                     document.getElementById('kpi-' + leaf.uid),
                     document.getElementById('kpi-' + item.uid),
-                    {color: '#639dd7', size: 2, path: 'grid'}
+                    { color: '#639dd7', size: 2, path: 'grid' }
                 ));
             }
         }
@@ -173,6 +176,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         div.style.left = 50 + this.offsetLeft * index + 'px';
         div.setAttribute('data-id', leaf.uid);
         div.setAttribute('data-parent-id', leaf.parentId);
+        div.setAttribute('data-is-read-only', String(this.isReadOnly));
 
         div.addEventListener('mouseover', this.kpiMouseOverListener);
         div.addEventListener('click', this.kpiClickListener);
@@ -219,18 +223,19 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
                 kpiTreeConfig.selectKpiId = thisDiv.dataset.id;
 
                 highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
+                if (thisDiv.dataset.isReadOnly !== "true") {
+                    const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
+                    const content = div.innerText;
+                    div.innerHTML = '';
 
-                const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
-                const content = div.innerText;
-                div.innerHTML = '';
+                    const textarea = document.createElement('textarea');
+                    textarea.value = content;
+                    textarea.setAttribute('data-id', thisDiv.dataset.id);
+                    textarea.addEventListener('change', editEndListener);
+                    textarea.setAttribute('class', 'active-textarea');
 
-                const textarea = document.createElement('textarea');
-                textarea.value = content;
-                textarea.setAttribute('data-id', thisDiv.dataset.id);
-                textarea.addEventListener('change', editEndListener);
-                textarea.setAttribute('class', 'active-textarea');
-
-                div.append(textarea);
+                    div.append(textarea);
+                }
             }
         }
     }

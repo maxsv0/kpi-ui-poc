@@ -3,11 +3,6 @@
   height: 800px;
 }
 
-@keyframes kpiTreeScale {
-  from {transform: scale(1)}
-  to {transform: scale(1.1)}
-}
-
 .kpi {
   width: 175px;
   height: 65px;
@@ -21,9 +16,7 @@
 .kpi-active {
   border: 2px solid #a80000;
   z-index:1000;
-  transform: scale(1.1);
-  animation-name: kpiTreeScale;
-  animation-duration: 0.5s;
+  color: #a80000;
 }
 
 .kpi-control {
@@ -41,4 +34,38 @@
   height:90%;
   max-height: 90%;
 }
+
+.title {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+
+  background: #004085;
+  padding: 20px;
+  color: white;
+  border-radius: 5px;
+}
+
+.badge {
+  margin: 0 10px
+}
+
+.btn {
+  margin-right: 10px;
+}
+
+.fixed-top {
+  top: 60px;
+}
+
+.edits {
+  display: none;
+}
+
+@media only screen and (min-width: 1025px) {
+  .edits {
+    display: block;
+  }
+}
+
 

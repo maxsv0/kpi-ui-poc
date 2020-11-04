@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from '@angular/core';
-import { User } from "./../model/user";
 import { Router } from "@angular/router";
 
 @Injectable({
@@ -18,8 +17,9 @@ export class AuthService {
 
         this.auth().onAuthStateChanged((user) => {
             if (user) {
+                this.router.navigate(['']);
                 this.ngZone.run(() => {
-                    console.log('user signed in')
+                    console.log('user signed in');
                 });
             }
         });

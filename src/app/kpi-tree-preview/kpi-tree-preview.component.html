@@ -1,17 +1,17 @@
-<div *ngIf="kpiTree" class="jumbotron col-3">
-    <h3>{{kpiTree.name}}</h3>
-    <h4>Created at {{kpiTree.created}}</h4>
-    <h4>ID: {{kpiTree.uid}}</h4>
+<div *ngIf="showTitle">
+    <h3 class="title">{{kpiTree.name}}<span class="badge badge-secondary" *ngIf="isReadOnly">Read Only</span></h3>
+    <!-- <h4>Created at {{kpiTree.created}}</h4>
+    <h4>ID: {{kpiTree.uid}}</h4> -->
 </div>
 
 <div id="kpitree">
 </div>
 
-<div class="fixed-bottom bg-light p-3" *ngIf="!isReadOnly">
-    <button (click)="addKpi()">Add 2 children to Selected</button> &nbsp;&nbsp;
-    <button (click)="moveKpiSelected(50)">Move Down</button> &nbsp;&nbsp;
-    <button (click)="moveKpiSelected(-50)">Move Up</button> &nbsp;&nbsp;
-    <button (click)="removeKpiSelected()">Remove Selected</button> &nbsp;&nbsp;
+<div class="edits fixed-top bg-white p-3" *ngIf="!isReadOnly">
+    <button class="btn btn-secondary" (click)="addKpi()">Add 2 children to Selected</button> 
+    <button class="btn btn-secondary" (click)="moveKpiSelected(50)">Move Down</button> 
+    <button class="btn btn-secondary" (click)="moveKpiSelected(-50)">Move Up</button>
+    <button class="btn btn-secondary" (click)="removeKpiSelected()">Remove Selected</button> 
     <!-- <button (click)="removeKpiTree()">Remove ALL</button> &nbsp;&nbsp; -->
     <!-- <button (click)="initKpiTreeRecursive()">Draw Tree</button> with max depth <input id="maxDepth" value="{{maxDepth}}" size="2"> -->
 </div>

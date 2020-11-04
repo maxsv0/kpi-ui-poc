@@ -1,7 +1,14 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-4 offset-md-4">
-            <h1>Welcome!</h1>
+        <div class="col-6">
+            <h2>
+                Welcome in DashKPI!
+                <small class="text-muted">Track KPI with ease</small>
+            </h2>
         </div>
     </div>
+</div>
+
+<div *ngIf="kpiTree" class="index-kpi-tree">
+    <app-kpi-tree-preview [kpiTree]="kpiTree" [isReadOnly]="true" [hasNoTitle]="true"></app-kpi-tree-preview>
 </div>

@@ -15,8 +15,6 @@ export class MyTreesComponent {
       this.kpiService.getKpiTreesList()
           .subscribe(response => {
               this.kpiTrees = response.kpiTrees;
-
-              console.log(this.kpiTrees);
           });
   }
 
