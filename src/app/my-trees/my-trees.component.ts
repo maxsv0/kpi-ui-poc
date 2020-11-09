@@ -11,8 +11,8 @@ export class MyTreesComponent {
 
   kpiTrees: KpiTree[] = [];
 
-  constructor(private kpiService: KpiService) {
-      this.kpiService.getKpiTreesList()
+  constructor(public kpiService: KpiService) {
+      this.kpiService.getMyKpiTreesList()
           .subscribe(response => {
               this.kpiTrees = response.kpiTrees;
           });

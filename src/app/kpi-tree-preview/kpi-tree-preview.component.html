@@ -1,19 +1,10 @@
 <div *ngIf="showTitle">
-    <h3 class="title">{{kpiTree.name}}<span class="badge badge-secondary" *ngIf="isReadOnly">Read Only</span></h3>
-    <!-- <h4>Created at {{kpiTree.created}}</h4>
-    <h4>ID: {{kpiTree.uid}}</h4> -->
+    <h3 class="title">{{kpiTree.name}}
+        <span class="badge badge-secondary" *ngIf="isReadOnly">Read Only</span>
+        <button class="btn btn-primary" *ngIf="!isReadOnly">Save</button> </h3>
 </div>
 
 <div id="kpitree">
-</div>
-
-<div class="edits fixed-top bg-white p-3" *ngIf="!isReadOnly">
-    <button class="btn btn-secondary" (click)="addKpi()">Add 2 children to Selected</button> 
-    <button class="btn btn-secondary" (click)="moveKpiSelected(50)">Move Down</button> 
-    <button class="btn btn-secondary" (click)="moveKpiSelected(-50)">Move Up</button>
-    <button class="btn btn-secondary" (click)="removeKpiSelected()">Remove Selected</button> 
-    <!-- <button (click)="removeKpiTree()">Remove ALL</button> &nbsp;&nbsp; -->
-    <!-- <button (click)="initKpiTreeRecursive()">Draw Tree</button> with max depth <input id="maxDepth" value="{{maxDepth}}" size="2"> -->
 </div>
 
 <div id="kpiControl" class="kpi-control">
@@ -21,3 +12,56 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit
+                    {{ kpiTreeConfig && getSelectedKpi() && getSelectedKpi().title }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <label for="title">Title:</label>
+                    <input id="title" type="text" />
+                </div>
+
+                <div class="col-12">
+                    <label>Status:</label>
+                </div>
+
+                <div class="col-12">
+                    <input type="radio" name="status" value="warning" />
+                    <label for="warning">Warning</label>
+                </div>
+
+                <div class="col-12">
+                    <input type="radio" name="status" value="info" />
+                    <label for="info">Info</label>
+                </div>
+
+                <div class="col-12">
+                    <input type="radio" name="status" value="error" />
+                    <label for="error">Error</label>
+                </div>
+
+                <div class="col-12">
+                    <label for="specsymbol">Special symbol:</label>
+                    <input id="specsymbol" type="text" placeholder="($)" />
+                </div>
+
+                <button class="btn" (click)="addKpi()">Add 2 children</button>
+                <button class="btn" (click)="moveKpiSelected(50)">Move Down</button>
+                <button class="btn" (click)="moveKpiSelected(-50)">Move Up</button>
+                <button class="btn" (click)="removeKpiSelected()">Remove</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="kpiService.saveKpi(kpiTreeConfig.selectKpiId)">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

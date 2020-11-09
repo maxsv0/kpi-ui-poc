@@ -9,6 +9,8 @@ import {
     KpiTreeConfig
 } from "../kpi-tree-tools";
 import { KpiRecursive } from "../model/kpi-recursive";
+import { KpiService } from '../service/kpi.service';
+import icons from '@primer/octicons';
 
 declare let LeaderLine: any;
 
@@ -31,11 +33,13 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     @Input("kpiTree") kpiTree: KpiTree;
     @Input("isReadOnly") isReadOnly: boolean = false;
     @Input("hasNoTitle") hasNoTitle: boolean = false;
+    @Input("isNew") isNew: boolean = false;
+
     public showTitle: boolean = false;
+    public kpiTreeConfig: KpiTreeConfig = kpiTreeConfig;
+    public icons: any = icons;
 
-    constructor() {
-
-    }
+    constructor(public kpiService: KpiService) {}
 
     ngOnDestroy() {
         this.removeKpiTree();
@@ -221,22 +225,31 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
             if (thisDiv.dataset.id !== kpiTreeConfig.selectKpiId) {
                 kpiTreeConfig.selectKpiId = thisDiv.dataset.id;
+                console.log(kpiTreeConfig);
 
                 highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
                 if (thisDiv.dataset.isReadOnly !== "true") {
                     const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
-                    const content = div.innerText;
-                    div.innerHTML = '';
+                    const button = document.createElement('button');
 
-                    const textarea = document.createElement('textarea');
-                    textarea.value = content;
-                    textarea.setAttribute('data-id', thisDiv.dataset.id);
-                    textarea.addEventListener('change', editEndListener);
-                    textarea.setAttribute('class', 'active-textarea');
+                    document.querySelectorAll('.edit-btn').forEach(node => node.remove())
 
-                    div.append(textarea);
+                    button.innerText = "Edit";
+                    button.type = "button";
+                    button.className = 'btn btn-info edit-btn'
+                    button.setAttribute('data-id', thisDiv.dataset.id);
+                    button.setAttribute('data-toggle', 'modal');
+                    button.setAttribute('data-target', '#modal');
+                    // textarea.addEventListener('change', editEndListener);
+                    // textarea.setAttribute('class', 'active-textarea');
+
+                    div.append(button);
                 }
             }
         }
+    }
+
+    getSelectedKpi() {
+        return kpiTreeConfig.kpiTree.kpi.find(item => item.uid === kpiTreeConfig.selectKpiId);
     }
 }

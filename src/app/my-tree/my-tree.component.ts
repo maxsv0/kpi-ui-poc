@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KpiTree } from '../model/kpi-tree';
-import { KpiService } from '../service/kpi.service';
 
 @Component({
   selector: 'app-my-tree',
@@ -10,18 +9,13 @@ import { KpiService } from '../service/kpi.service';
 })
 export class MyTreeComponent {
   kpiTree: KpiTree;
+  isNew: boolean = false;
 
   constructor(
-      private activatedRoute: ActivatedRoute,
-      private kpiService: KpiService
+    private activatedRoute: ActivatedRoute
   ) {
-      const treeId = this.activatedRoute.snapshot.params.treeID;
-
-      this.kpiService.getKpiTree(treeId)
-          .subscribe(response => {
-              this.kpiTree = response.kpiTree;
-              console.log("treeId=" + this.kpiTree);
-          });
+    const treeId = this.activatedRoute.snapshot.params.treeID;
+    this.isNew = treeId && treeId === 'new';
   }
 
 }
