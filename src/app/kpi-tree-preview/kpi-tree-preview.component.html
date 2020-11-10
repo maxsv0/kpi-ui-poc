@@ -1,7 +1,7 @@
 <div *ngIf="showTitle">
     <h3 class="title">{{kpiTree.name}}
         <span class="badge badge-secondary" *ngIf="isReadOnly">Read Only</span>
-        <button class="btn btn-primary" *ngIf="!isReadOnly">Save</button> </h3>
+    </h3>
 </div>
 
 <div id="kpitree">
@@ -23,9 +23,10 @@
                 </button>
             </div>
             <div class="modal-body">
+                <h5>KPI Data</h5>
                 <div class="col-12">
                     <label for="title">Title:</label>
-                    <input id="title" type="text" />
+                    <input id="title" type="text" placeholder="Title..." (change)="onKpiTitleChange($event)" />
                 </div>
 
                 <div class="col-12">
@@ -33,24 +34,27 @@
                 </div>
 
                 <div class="col-12">
-                    <input type="radio" name="status" value="warning" />
+                    <input type="radio" name="status" value="warning" id="warning"
+                        (change)="onKpiStatusChange($event)" />
                     <label for="warning">Warning</label>
                 </div>
 
                 <div class="col-12">
-                    <input type="radio" name="status" value="info" />
+                    <input type="radio" name="status" value="primary" id="primary" (change)="onKpiStatusChange($event)" />
                     <label for="info">Info</label>
                 </div>
 
                 <div class="col-12">
-                    <input type="radio" name="status" value="error" />
-                    <label for="error">Error</label>
+                    <input type="radio" name="status" value="danger" id="danger" (change)="onKpiStatusChange($event)" />
+                    <label for="danger">Error</label>
                 </div>
 
                 <div class="col-12">
                     <label for="specsymbol">Special symbol:</label>
-                    <input id="specsymbol" type="text" placeholder="($)" />
+                    <input id="specsymbol" type="text" placeholder="$" (change)="onKpiSymbolChange($event)" />
                 </div>
+
+                <h5>KPI Actions</h5>
 
                 <button class="btn" (click)="addKpi()">Add 2 children</button>
                 <button class="btn" (click)="moveKpiSelected(50)">Move Down</button>
@@ -59,8 +63,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"
-                    (click)="kpiService.saveKpi(kpiTreeConfig.selectKpiId)">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSave()">Save changes</button>
             </div>
         </div>
     </div>

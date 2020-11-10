@@ -6,7 +6,7 @@ import { Router } from "@angular/router";
 })
 
 export class AuthService {
-    auth: any;
+    auth;
 
     constructor(
         public router: Router,
@@ -17,7 +17,6 @@ export class AuthService {
 
         this.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.router.navigate(['']);
                 this.ngZone.run(() => {
                     console.log('user signed in');
                 });

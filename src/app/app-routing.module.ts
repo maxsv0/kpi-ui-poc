@@ -5,14 +5,13 @@ import {MyTreesComponent} from './my-trees/my-trees.component';
 import {MyTreeComponent} from './my-tree/my-tree.component';
 import {KpiTreeComponent} from "./kpi-tree/kpi-tree.component";
 import {KpiTreesComponent} from "./kpi-trees/kpi-trees.component";
-import {AuthGuard} from "./service/auth.guard";
 
 const routes: Routes = [
     {path: '', component: IndexComponent},
     {path: 'trees', component: KpiTreesComponent},
     {path: 'trees/:treeID', component: KpiTreeComponent},
-    {path: 'my-trees', component: MyTreesComponent, canActivate: [AuthGuard]},
-    {path: 'my-trees/:treeID', component: MyTreeComponent, canActivate: [AuthGuard]},
+    {path: 'my-trees', component: MyTreesComponent},
+    {path: 'my-trees/:treeID', component: MyTreeComponent},
 
     // otherwise redirect to home
     {path: '**', redirectTo: ''}

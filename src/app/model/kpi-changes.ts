@@ -1,0 +1,1 @@
+export type KpiChanges = { title?: string, status?: string, symbol?: string };

@@ -2,6 +2,9 @@
     <div class="row">
         <h2>My KPI Trees <a class="btn btn-primary" [routerLink]="['/my-trees','new']">Create New</a></h2>
     </div>
+    <div class="row" *ngIf="hasNoTrees">
+        Sorry, you have no trees yet! But you can create one!
+    </div>
     <div class="row" *ngIf="kpiTrees.length > 0">
         <ul class="col-8 list-group" *ngFor="let tree of kpiTrees">
             <li class="list-group-item "><strong><a [routerLink]="['/my-trees',tree.uid]">{{tree.name}}</a></strong></li>
