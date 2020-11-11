@@ -19,10 +19,6 @@ export class KpiService {
         return this.http.get<KpiResponse>(`${this.baseUrl}/kpiTree?treeId=${treeId}`);
     }
 
-    getKpiTreesList() {
-        return this.http.get<KpiListResponse>(`${this.baseUrl}/kpiTrees`);
-    }
-
     getMyKpiTreesList() {
         return this.http.get<KpiListResponse>(`${this.baseUrl}/kpiTrees-my?userId=${this.authService.getCurrentUser().uid}`);
     }

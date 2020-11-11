@@ -67,6 +67,50 @@
   margin-top: -50px;
 }
 
+.modal-dialog-right {
+    margin: 3.5rem 0 0 auto;
+    height: calc(100% - 3.5rem);
+
+    .modal-content {
+      align-self: flex-start;
+      height: 100%;
+
+      .modal-body {
+        flex-grow: 0;
+      }
+    }
+}
+
+.status-radio {
+  width:100px;
+  height: 100px;
+  cursor: pointer;
+  padding-top: 35px;
+  padding-left: 45px;
+
+  input {
+    display: block;
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+
+  &.status-primary {
+    background: #b8daff;
+    color: #004085;
+
+  }
+  &.status-warning {
+    background: #ffeeba;
+    color: #856404;
+
+  }
+  &.status-danger {
+    background: #f5c6cb;
+    color: #721c24;
+
+  }
+}
+
 .modal-body {
   input[type=radio] {
     margin-right: 10px;

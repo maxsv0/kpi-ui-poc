@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular
 import { KpiTree } from "../model/kpi-tree";
 import { Kpi } from "../model/kpi";
 import {
-    editEndListener,
     getRandomUUID,
     highlightPathToRootByUid,
     highlightResetPathToRootByUid,
@@ -10,7 +9,6 @@ import {
 } from "../kpi-tree-tools";
 import { KpiRecursive } from "../model/kpi-recursive";
 import { KpiService } from '../service/kpi.service';
-import icons from '@primer/octicons';
 import { KpiChanges } from '../model/kpi-changes';
 
 declare let LeaderLine: any;
@@ -40,7 +38,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     public kpiTreeConfig: KpiTreeConfig = kpiTreeConfig;
     public selectedKpiChanges: KpiChanges = {};
 
-    constructor(public kpiService: KpiService) {}
+    constructor(public kpiService: KpiService) { }
 
     ngOnDestroy() {
         this.removeKpiTree();
@@ -146,7 +144,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     drawTreeLeaf(leaf: KpiRecursive, root: KpiRecursive, depth: number, maxDepth: number, topOffset: number) {
 
         // console.log(depth, leaf.uid, leaf.title, topOffset + leaf.offsetTop);
-        this.drawTreeLeafKpi(leaf, root, depth, topOffset + leaf.offsetTop);
+        this.drawTreeLeafKpi(leaf, root, depth, topOffset + leaf.offsetTop, this.isReadOnly);
 
         if (maxDepth != -1 && depth > maxDepth) return;
 
@@ -170,7 +168,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    drawTreeLeafKpi(leaf: KpiRecursive, root: KpiRecursive, index: number, topOffset: number) {
+    drawTreeLeafKpi(leaf: KpiRecursive, root: KpiRecursive, index: number, topOffset: number, isReadOnly: boolean) {
         const tree = document.getElementById('kpitree');
 
         const div = document.createElement('div');
@@ -183,13 +181,13 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         div.setAttribute('data-parent-id', leaf.parentId);
         div.setAttribute('data-is-read-only', String(this.isReadOnly));
 
-        div.addEventListener('mouseover', this.kpiMouseOverListener);
+        div.addEventListener('mouseover', ($event) => this.kpiMouseOverListener($event, isReadOnly));
         div.addEventListener('click', this.kpiClickListener);
 
         tree.appendChild(div);
     }
 
-    kpiMouseOverListener(event) {
+    kpiMouseOverListener(event, isReadOnly) {
         const thisDiv = event.target;
 
         if (kpiTreeConfig.focusKpiId != null) {
@@ -203,19 +201,22 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
             kpiTreeConfig.focusKpiId = thisDiv.dataset.id;
 
-            const button = document.createElement('button');
+            if (!isReadOnly) {
 
-            document.querySelectorAll('.edit-btn').forEach(node => node.remove())
+                const button = document.createElement('button');
 
-            button.innerText = "Edit";
-            button.type = "button";
-            button.className = 'btn btn-info edit-btn'
-            button.setAttribute('data-id', thisDiv.dataset.id);
-            button.setAttribute('data-toggle', 'modal');
-            button.setAttribute('data-target', '#modal');
-            button.addEventListener('mouseover', (e) => e.stopImmediatePropagation());
+                document.querySelectorAll('.edit-btn').forEach(node => node.remove())
 
-            div.append(button);
+                button.innerText = "Edit";
+                button.type = "button";
+                button.className = 'btn btn-info edit-btn'
+                button.setAttribute('data-id', thisDiv.dataset.id);
+                button.setAttribute('data-toggle', 'modal');
+                button.setAttribute('data-target', '#modal');
+                button.addEventListener('mouseover', (e) => e.stopImmediatePropagation());
+
+                div.append(button);
+            }
         }
     }
 
@@ -265,7 +266,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     onSave() {
         const kpi = this.getSelectedKpi();
         kpi.style = this.selectedKpiChanges.status;
-        kpi.title = `${this.selectedKpiChanges.title} (${this.selectedKpiChanges.symbol})`;
+        kpi.title = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol || '$'})`;
         const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
         div.innerText = kpi.title;
         div.className = `kpi text-center alert alert-${kpi.style}`;

@@ -12,8 +12,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal modal-right fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Edit
@@ -23,47 +23,48 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5>KPI Data</h5>
-                <div class="col-12">
-                    <label for="title">Title:</label>
-                    <input id="title" type="text" placeholder="Title..." (change)="onKpiTitleChange($event)" />
+                <div class="col-12 form-group">
+                    <h5><label for="title">Title:</label></h5>
+                    <input class="form-control" id="title" type="text" placeholder="No Title" (change)="onKpiTitleChange($event)" />
                 </div>
 
-                <div class="col-12">
-                    <label>Status:</label>
+                <div class="col-12 mt-3 form-group">
+                    <h5><label>Status:</label></h5>
                 </div>
 
-                <div class="col-12">
-                    <input type="radio" name="status" value="warning" id="warning"
-                        (change)="onKpiStatusChange($event)" />
-                    <label for="warning">Warning</label>
+                <div class="row">
+                    <label class="col-4 status-radio status-warning" for="warning">Warning <input type="radio"
+                            name="status" value="warning" id="warning" (change)="onKpiStatusChange($event)"
+                            checked="getSelectedKpi().style.match(/warning/)" /></label>
+
+                    <label class="col-4 status-radio status-primary" for="primary">Primary <input type="radio"
+                            name="status" value="primary" id="primary" (change)="onKpiStatusChange($event)"
+                            checked="getSelectedKpi().style.match(/primary/)" /></label>
+
+                    <label class="col-4 status-radio status-danger" for="danger">Danger <input type="radio"
+                            name="status" value="danger" id="danger" (change)="onKpiStatusChange($event)"
+                            checked="getSelectedKpi().style.match(/danger/)" /></label>
                 </div>
 
-                <div class="col-12">
-                    <input type="radio" name="status" value="primary" id="primary" (change)="onKpiStatusChange($event)" />
-                    <label for="info">Info</label>
+                <div class="col-12 mt-3 mb-3 form-group">
+                    <h5><label for="specsymbol">Special symbol:</label></h5>
+                    <input class="form-control" id="specsymbol" type="text" placeholder="$"
+                        (change)="onKpiSymbolChange($event)" />
                 </div>
 
-                <div class="col-12">
-                    <input type="radio" name="status" value="danger" id="danger" (change)="onKpiStatusChange($event)" />
-                    <label for="danger">Error</label>
+                <button class="btn btn-info" (click)="moveKpiSelected(50)">Move Down</button>
+                <button class="btn btn-info" (click)="moveKpiSelected(-50)">Move Up</button>
+                <div class="row col-12 mt-2">
+                    <button class="btn btn-primary" (click)="addKpi()">Add 2 children</button>
                 </div>
-
-                <div class="col-12">
-                    <label for="specsymbol">Special symbol:</label>
-                    <input id="specsymbol" type="text" placeholder="$" (change)="onKpiSymbolChange($event)" />
-                </div>
-
-                <h5>KPI Actions</h5>
-
-                <button class="btn" (click)="addKpi()">Add 2 children</button>
-                <button class="btn" (click)="moveKpiSelected(50)">Move Down</button>
-                <button class="btn" (click)="moveKpiSelected(-50)">Move Up</button>
-                <button class="btn" (click)="removeKpiSelected()">Remove</button>
+                <div class="row col-12 mt-2">
+                    <button class="btn btn-danger" (click)="removeKpiSelected()">Remove</button>
+                </div> 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSave()">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSave()">Save
+                    changes</button>
             </div>
         </div>
     </div>
