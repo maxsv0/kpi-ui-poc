@@ -53,11 +53,13 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     addKpi() {
-        this.addKpiChildren(kpiTreeConfig.selectKpiId);
+        this.kpiService.addNewKpi(kpiTreeConfig.selectKpiId, kpiTreeConfig.kpiTree.uid).subscribe(kpisConfig => {
+            kpiTreeConfig.kpiTree = kpisConfig.kpiTree;
 
-        this.removeKpiTree();
+            this.removeKpiTree();
 
-        this.initKpiTreeRecursive();
+            this.initKpiTreeRecursive();
+        })
     }
 
     moveKpiSelected(offset: number) {
@@ -175,9 +177,10 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         const tree = document.getElementById('kpitree');
 
         const div = document.createElement('div');
+
         div.className = 'kpi text-center ' + leaf.style;
-        div.innerHTML = leaf.title;
         div.id = 'kpi-' + leaf.uid;
+        div.innerHTML = `${leaf.title} (${leaf.symbol})`;
         div.style.top = topOffset + 'px';
         div.style.left = 50 + this.offsetLeft * index + 'px';
         div.setAttribute('data-id', leaf.uid);
@@ -252,10 +255,11 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     onSave() {
-        this.selectedKpiChanges.title = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol || '$'})`;
         const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
-        div.innerText = this.selectedKpiChanges.title;
+        div.innerHTML = '';
+        div.innerHTML = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol  || ''})`;
         div.className = `kpi text-center ${this.selectedKpiChanges.style}`;
+
         this.kpiService.saveKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);
     }
 }

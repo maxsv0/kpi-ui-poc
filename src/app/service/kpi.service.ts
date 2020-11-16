@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {KpiResponse} from "../model/kpi-response";
-import {Kpi} from "../model/kpi";
-import {KpiListResponse} from "../model/kpi-list-response";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { KpiResponse } from "../model/kpi-response";
+import { Kpi } from "../model/kpi";
+import { KpiListResponse } from "../model/kpi-list-response";
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class KpiService {
     }
 
     saveKpi(kpi: Kpi, kpiTreeId: string) {
-        return this.http.post<KpiListResponse>(`${this.baseUrl}/kpi/update`, JSON.stringify({kpi, kpiTreeId}), {
+        return this.http.post<KpiListResponse>(`${this.baseUrl}/kpi/update`, JSON.stringify({ kpi, kpiTreeId }), {
             headers: {
                 'Content-type': 'application/json'
             }
@@ -36,13 +36,24 @@ export class KpiService {
     }
 
     removeKpi(kpi: Kpi, kpiTreeId: string) {
-        return this.http.delete<KpiListResponse>(`${this.baseUrl}/delete/${kpiTreeId}/kpi/${kpi.uid}`).subscribe(data => {
+        return this.http.delete<any>(`${this.baseUrl}/delete/${kpiTreeId}/kpi/${kpi.uid}`).subscribe(data => {
             console.log(data);
         })
     }
 
+    addNewKpi(parentUid: string, kpiTreeId: string) {
+        return this.http.post<any>(`${this.baseUrl}/kpi/new`, JSON.stringify({
+            "kpiUid": parentUid,
+            "kpiTreeId": kpiTreeId
+        }), {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+    }
+
     removeKpiTree(kpiTreeId: string) {
-        return this.http.delete<KpiListResponse>(`${this.baseUrl}/delete/${kpiTreeId}`).subscribe(data => {
+        return this.http.delete<any>(`${this.baseUrl}/delete/${kpiTreeId}`).subscribe(data => {
             console.log(data);
         })
     }

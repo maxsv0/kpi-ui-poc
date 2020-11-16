@@ -4,6 +4,7 @@ export class KpiRecursive {
     orderId: number;
     title: string;
     style: string;
+    symbol?: string;
     offsetTop: number;
     children: KpiRecursive[];
 }
