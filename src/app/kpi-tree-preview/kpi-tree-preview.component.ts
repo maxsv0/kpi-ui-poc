@@ -180,7 +180,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         div.className = 'kpi text-center ' + leaf.style;
         div.id = 'kpi-' + leaf.uid;
-        div.innerHTML = `${leaf.title} (${leaf.symbol})`;
+        div.innerHTML = `${leaf.title} ${leaf.symbol ? '(' + leaf.symbol + ')' : ''}`;
         div.style.top = topOffset + 'px';
         div.style.left = 50 + this.offsetLeft * index + 'px';
         div.setAttribute('data-id', leaf.uid);
@@ -257,7 +257,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     onSave() {
         const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
         div.innerHTML = '';
-        div.innerHTML = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol  || ''})`;
+        div.innerHTML = `${this.selectedKpiChanges.title} ${this.selectedKpiChanges.symbol ? '(' + this.selectedKpiChanges.symbol + ')' : ''}`;
         div.className = `kpi text-center ${this.selectedKpiChanges.style}`;
 
         this.kpiService.saveKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);

@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<div class="modal modal-right fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+<div *ngIf="!isReadOnly" class="modal modal-right fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-right modal-sm" role="document">
         <div class="modal-content" *ngIf="getSelectedKpi()">
             <div class="modal-header">
@@ -54,7 +54,7 @@
                 <div class="col-12 mt-3 mb-3 form-group">
                     <h5><label for="specsymbol">Special symbol:</label></h5>
                     <input class="form-control" id="specsymbol" type="text" placeholder="$"
-                        (change)="onKpiSymbolChange($event)" />
+                        (change)="onKpiSymbolChange($event)" value={{getSelectedKpi().symbol}} />
                 </div>
 
                 <button class="btn btn-info" (click)="moveKpiSelected(50)">Move Down</button>
