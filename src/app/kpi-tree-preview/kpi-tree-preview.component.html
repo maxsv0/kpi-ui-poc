@@ -1,6 +1,11 @@
 <div *ngIf="showTitle">
     <h3 class="title">{{kpiTree.name}}
         <span class="badge badge-secondary" *ngIf="isReadOnly">Read Only</span>
+        <span class="remove-tree" (click)="kpiService.removeKpiTree(kpiTree.uid)">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill" fill="#FF0000" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+              </svg>
+        </span>
     </h3>
 </div>
 
@@ -13,11 +18,11 @@
 </div>
 
 <div class="modal modal-right fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-right" role="document">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-right modal-sm" role="document">
+        <div class="modal-content" *ngIf="getSelectedKpi()">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Edit
-                    {{ kpiTreeConfig && getSelectedKpi() && getSelectedKpi().title }}</h5>
+                    {{ getSelectedKpi().title }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -25,7 +30,7 @@
             <div class="modal-body">
                 <div class="col-12 form-group">
                     <h5><label for="title">Title:</label></h5>
-                    <input class="form-control" id="title" type="text" placeholder="No Title" (change)="onKpiTitleChange($event)" />
+                    <input class="form-control" id="title" type="text" placeholder="No Title" (change)="onKpiTitleChange($event)" value={{getSelectedKpi().title}} />
                 </div>
 
                 <div class="col-12 mt-3 form-group">
@@ -35,15 +40,15 @@
                 <div class="row">
                     <label class="col-4 status-radio status-warning" for="warning">Warning <input type="radio"
                             name="status" value="warning" id="warning" (change)="onKpiStatusChange($event)"
-                            checked="getSelectedKpi().style.match(/warning/)" /></label>
+                             /></label>
 
                     <label class="col-4 status-radio status-primary" for="primary">Primary <input type="radio"
                             name="status" value="primary" id="primary" (change)="onKpiStatusChange($event)"
-                            checked="getSelectedKpi().style.match(/primary/)" /></label>
+                             /></label>
 
                     <label class="col-4 status-radio status-danger" for="danger">Danger <input type="radio"
                             name="status" value="danger" id="danger" (change)="onKpiStatusChange($event)"
-                            checked="getSelectedKpi().style.match(/danger/)" /></label>
+                            /></label>
                 </div>
 
                 <div class="col-12 mt-3 mb-3 form-group">

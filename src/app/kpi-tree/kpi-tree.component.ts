@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { KpiService } from "../service/kpi.service";
 import { KpiTree } from "../model/kpi-tree";
-import { getRandomUUID } from '../kpi-tree-tools';
 
 @Component({
     selector: 'app-kpi-tree',
@@ -30,42 +29,10 @@ export class KpiTreeComponent implements OnInit {
                     console.log("tree=" + this.kpiTree);
                 });
         } else {
-            const treeUId = getRandomUUID();
-            const treeUIdRoot = getRandomUUID();
-            const treeUIdRootChildOne = getRandomUUID();
-            const treeUIdRootChildTwo = getRandomUUID();
-
-            this.kpiTree = {
-                "uid": treeUId,
-                "name": "Sample Test Tree",
-                "created": new Date().toString(),
-                "kpi": [
-                    {
-                        "uid": treeUIdRoot,
-                        "parentId": null,
-                        "orderId": 1,
-                        "title": "Sustainable Growth",
-                        "style": "alert alert-danger",
-                        "offsetTop": null
-                    },
-                    {
-                        "uid": treeUIdRootChildOne,
-                        "parentId": treeUIdRoot,
-                        "orderId": 1,
-                        "title": "Revenue (€)",
-                        "style": "alert alert-primary",
-                        "offsetTop": 0
-                    },
-                    {
-                        "uid": treeUIdRootChildTwo,
-                        "parentId": treeUIdRoot,
-                        "orderId": 2,
-                        "title": "Costs (€)",
-                        "style": "alert alert-primary",
-                        "offsetTop": 0
-                    }
-                ]
-            }
+            this.kpiService.getNewKpiTree().subscribe(response => {
+                this.kpiTree = response.kpiTree;
+                console.log("new-tree=" + this.kpiTree);
+            })
         }
     }
 

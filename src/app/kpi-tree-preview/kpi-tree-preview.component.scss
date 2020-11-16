@@ -69,7 +69,7 @@
 
 .modal-dialog-right {
     margin: 3.5rem 0 0 auto;
-    height: calc(100% - 3.5rem);
+    height: 660px;
 
     .modal-content {
       align-self: flex-start;
@@ -85,8 +85,8 @@
   width:100px;
   height: 100px;
   cursor: pointer;
-  padding-top: 35px;
-  padding-left: 45px;
+  padding-top: 25px;
+  padding-left: 15px;
 
   input {
     display: block;
@@ -111,6 +111,10 @@
   }
 }
 
+.modal-backdrop {
+  background-color: transparent;
+}
+
 .modal-body {
   input[type=radio] {
     margin-right: 10px;
@@ -118,6 +122,13 @@
   input[type=text] {
     margin-left: 10px;
   }
+}
+
+.remove-tree {
+  position: relative;
+  top: -40px;
+  left: 40px;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 1025px) {

@@ -7,7 +7,10 @@
     </div>
     <div class="row" *ngIf="kpiTrees.length > 0">
         <ul class="col-8 list-group" *ngFor="let tree of kpiTrees">
-            <li class="list-group-item "><strong><a [routerLink]="['/my-trees',tree.uid]">{{tree.name}}</a></strong></li>
+            <li class="list-group-item ">
+                <strong><a [routerLink]="['/my-trees',tree.uid]">{{tree.name}}</a></strong>
+                <span class="glyphicon glyphicon-asterisk"></span>
+            </li>
         </ul>
     </div>
 </div>

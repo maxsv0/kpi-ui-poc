@@ -9,7 +9,6 @@ import {
 } from "../kpi-tree-tools";
 import { KpiRecursive } from "../model/kpi-recursive";
 import { KpiService } from '../service/kpi.service';
-import { KpiChanges } from '../model/kpi-changes';
 
 declare let LeaderLine: any;
 
@@ -36,7 +35,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
     public showTitle: boolean = false;
     public kpiTreeConfig: KpiTreeConfig = kpiTreeConfig;
-    public selectedKpiChanges: KpiChanges = {};
+    public selectedKpiChanges: Kpi | null = null;
 
     constructor(public kpiService: KpiService) { }
 
@@ -82,6 +81,10 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         }
         kpiTreeConfig.kpiTree.kpi = newKpi;
         kpiTreeConfig.selectKpiId = '';
+
+        if (this.selectedKpiChanges) {
+            this.kpiService.removeKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);
+        }
 
         this.removeKpiTree();
 
@@ -180,14 +183,16 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         div.setAttribute('data-id', leaf.uid);
         div.setAttribute('data-parent-id', leaf.parentId);
         div.setAttribute('data-is-read-only', String(this.isReadOnly));
+        div.setAttribute('data-toggle', "modal");
+        div.setAttribute('data-target', "#modal");
 
-        div.addEventListener('mouseover', ($event) => this.kpiMouseOverListener($event, isReadOnly));
-        div.addEventListener('click', this.kpiClickListener);
+        div.addEventListener('mouseover', ($event) => this.kpiMouseOverListener($event));
+        div.addEventListener('click', ($event) => this.kpiClickListener($event, this));
 
         tree.appendChild(div);
     }
 
-    kpiMouseOverListener(event, isReadOnly) {
+    kpiMouseOverListener(event) {
         const thisDiv = event.target;
 
         if (kpiTreeConfig.focusKpiId != null) {
@@ -200,23 +205,6 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
             div.classList.add('kpi-active');
 
             kpiTreeConfig.focusKpiId = thisDiv.dataset.id;
-
-            if (!isReadOnly) {
-
-                const button = document.createElement('button');
-
-                document.querySelectorAll('.edit-btn').forEach(node => node.remove())
-
-                button.innerText = "Edit";
-                button.type = "button";
-                button.className = 'btn btn-info edit-btn'
-                button.setAttribute('data-id', thisDiv.dataset.id);
-                button.setAttribute('data-toggle', 'modal');
-                button.setAttribute('data-target', '#modal');
-                button.addEventListener('mouseover', (e) => e.stopImmediatePropagation());
-
-                div.append(button);
-            }
         }
     }
 
@@ -230,7 +218,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    kpiClickListener(event) {
+    kpiClickListener(event, self) {
         const thisDiv = event.target;
 
         if (thisDiv.dataset.id != null) {
@@ -240,7 +228,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
             if (thisDiv.dataset.id !== kpiTreeConfig.selectKpiId) {
                 kpiTreeConfig.selectKpiId = thisDiv.dataset.id;
-                console.log(kpiTreeConfig);
+                self.selectedKpiChanges = { ...self.getSelectedKpi() };
 
                 highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
             }
@@ -256,7 +244,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     onKpiStatusChange($event) {
-        this.selectedKpiChanges.status = $event.currentTarget.value;
+        this.selectedKpiChanges.style = `alert alert-${$event.currentTarget.value}`;
     }
 
     onKpiSymbolChange($event) {
@@ -264,12 +252,10 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     onSave() {
-        const kpi = this.getSelectedKpi();
-        kpi.style = this.selectedKpiChanges.status;
-        kpi.title = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol || '$'})`;
+        this.selectedKpiChanges.title = `${this.selectedKpiChanges.title || 'No Title'} (${this.selectedKpiChanges.symbol || '$'})`;
         const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
-        div.innerText = kpi.title;
-        div.className = `kpi text-center alert alert-${kpi.style}`;
-        // this.kpiService.saveKpi(this.selectedKpiChanges);
+        div.innerText = this.selectedKpiChanges.title;
+        div.className = `kpi text-center ${this.selectedKpiChanges.style}`;
+        this.kpiService.saveKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);
     }
 }

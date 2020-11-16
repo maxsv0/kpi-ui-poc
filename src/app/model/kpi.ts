@@ -4,5 +4,6 @@ export class Kpi {
     orderId: number;
     title: string;
     style: string;
+    symbol?: string;
     offsetTop: number;
 }
