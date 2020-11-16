@@ -1,13 +1,13 @@
 #kpitree {
-  width: 1500px;
-  height: 800px;
+  min-height: 1500px;
+  background: url('/assets/bg-dots.png');
 }
 
 .kpi {
   width: 175px;
   height: 65px;
   position: absolute;
-  padding: 5px;
+  padding: 5px 10px;
   z-index: 100;
   cursor: pointer;
   border: 2px solid #bebebe;
@@ -17,6 +17,22 @@
   border: 2px solid #a80000;
   z-index:1000;
   color: #a80000;
+}
+
+.kpi-symbol {
+  padding: 2px 3px;
+  border-radius: .5rem;
+  background: #efefef;
+}
+
+.alert {
+  border-radius: .5rem;
+  line-height: 25px;
+}
+
+.alert-primary {
+  background: #fff;
+  border: 1px solid #b7b6bb;
 }
 
 .kpi-control {

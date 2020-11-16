@@ -25,7 +25,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     lines = [];
     offset = 75;
     offsetTop = 700;
-    offsetLeft = 250;
+    offsetLeft = 275;
     maxDepth = -1;
 
     @Input("kpiTree") kpiTree: KpiTree;
@@ -167,7 +167,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
                 this.lines.push(new LeaderLine(
                     document.getElementById('kpi-' + leaf.uid),
                     document.getElementById('kpi-' + item.uid),
-                    { color: '#639dd7', size: 2, path: 'grid' }
+                    { color: '#83b4e5', size: 1, path: 'grid', endPlugSize: 2, dash: true}
                 ));
             }
         }
@@ -180,9 +180,9 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         div.className = 'kpi text-center ' + leaf.style;
         div.id = 'kpi-' + leaf.uid;
-        div.innerHTML = `${leaf.title} ${leaf.symbol ? '(' + leaf.symbol + ')' : ''}`;
+        div.innerHTML = `${leaf.title} ${leaf.symbol ? '<span class="kpi-symbol">' + leaf.symbol + '</span>' : ''}`;
         div.style.top = topOffset + 'px';
-        div.style.left = 50 + this.offsetLeft * index + 'px';
+        div.style.left = (50 + this.offsetLeft * index + (index === 0 ? 0 : 50)) + 'px';
         div.setAttribute('data-id', leaf.uid);
         div.setAttribute('data-parent-id', leaf.parentId);
         div.setAttribute('data-is-read-only', String(this.isReadOnly));
