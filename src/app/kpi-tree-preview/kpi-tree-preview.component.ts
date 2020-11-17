@@ -112,6 +112,9 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         kpiTreeConfig.kpiTreeRecursive = nest(kpiTreeConfig.kpiTree.kpi);
 
+        kpiTreeConfig.selectKpiId = null;
+        kpiTreeConfig.focusKpiId = null;
+
         this.createTreeKpiIndex(kpiTreeConfig.kpiTreeRecursive[0]);
 
         this.drawTree();
