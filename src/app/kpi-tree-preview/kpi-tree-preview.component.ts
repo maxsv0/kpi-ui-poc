@@ -1,14 +1,9 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { KpiTree } from "../model/kpi-tree";
-import { Kpi } from "../model/kpi";
-import {
-    getRandomUUID,
-    highlightPathToRootByUid,
-    highlightResetPathToRootByUid,
-    KpiTreeConfig
-} from "../kpi-tree-tools";
-import { KpiRecursive } from "../model/kpi-recursive";
-import { KpiService } from '../service/kpi.service';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {KpiTree} from "../model/kpi-tree";
+import {Kpi} from "../model/kpi";
+import {getRandomUUID, highlightPathToRootByUid, highlightResetPathToRootByUid, KpiTreeConfig} from "../kpi-tree-tools";
+import {KpiRecursive} from "../model/kpi-recursive";
+import {KpiService} from '../service/kpi.service';
 
 declare let LeaderLine: any;
 
@@ -63,34 +58,34 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     moveKpiSelected(offset: number) {
-        for (const kpi of kpiTreeConfig.kpiTree.kpi) {
-            if (kpi.uid === kpiTreeConfig.selectKpiId) {
-                kpi.offsetTop += offset;
-            }
-        }
+        const kpi = this.getSelectedKpi();
 
-        this.removeKpiTree();
+        kpi.offsetTop += offset;
 
-        this.initKpiTreeRecursive();
+        this.drawTree();
+
+        this.kpiService.saveKpi(kpi, kpiTreeConfig.kpiTree.uid);
     }
 
     removeKpiSelected() {
-        const newKpi = [];
-        for (const kpi of kpiTreeConfig.kpiTree.kpi) {
-            if (kpi.uid !== kpiTreeConfig.selectKpiId) {
-                newKpi.push(kpi);
+        let kpi = this.getKpiByUid(kpiTreeConfig.selectKpiId);
+
+        if (kpi != null && kpi.parentId !== null) {
+            let kpiParent = this.getKpiByUid(kpi.parentId);
+
+            if (kpiParent != null) {
+                const newKpi = [];
+                for (const kpiChild of kpiParent.children) {
+                    if (kpiChild.uid !== kpiTreeConfig.selectKpiId) {
+                        newKpi.push(kpi);
+                    }
+                }
+
+                kpiParent.children = newKpi;
+
+                this.drawTree();
             }
         }
-        kpiTreeConfig.kpiTree.kpi = newKpi;
-        kpiTreeConfig.selectKpiId = '';
-
-        if (this.selectedKpiChanges) {
-            this.kpiService.removeKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);
-        }
-
-        this.removeKpiTree();
-
-        this.initKpiTreeRecursive();
     }
 
     removeKpiTree() {
@@ -113,11 +108,37 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         kpiTreeConfig.kpiTreeRecursive = nest(kpiTreeConfig.kpiTree.kpi);
 
-        // this.maxDepth = parseInt((document.getElementById('maxDepth') as HTMLInputElement).value);
+        this.createTreeKpiIndex(kpiTreeConfig.kpiTreeRecursive[0]);
 
+        this.drawTree();
+    }
+
+    getSelectedKpi(): KpiRecursive {
+        return this.getKpiByUid(kpiTreeConfig.selectKpiId);
+    }
+
+    getKpiByUid(id: string): KpiRecursive {
+        const found = kpiTreeConfig.kpiTreeIndex.find(element => element.id === id);
+
+        return found !== null && found !== undefined ? found.kpi : found;
+    }
+
+    createTreeKpiIndex(leaf: KpiRecursive) {
+        kpiTreeConfig.kpiTreeIndex.push({"id": leaf.uid, "kpi": leaf});
+
+        for (const item of leaf.children) {
+            this.createTreeKpiIndex(item);
+        }
+    }
+
+    drawTree() {
         this.removeKpiTree();
 
-        this.drawTree(kpiTreeConfig.kpiTreeRecursive, this.maxDepth);
+        this.drawTreeLeaf(kpiTreeConfig.kpiTreeRecursive[0], kpiTreeConfig.kpiTreeRecursive[0], 0, this.maxDepth, this.offsetTop);
+
+        if (kpiTreeConfig.selectKpiId != null) {
+            highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
+        }
     }
 
     addKpiChildren(parentUid: string) {
@@ -138,12 +159,6 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         child2.offsetTop = 0;
 
         kpiTreeConfig.kpiTree.kpi.push(child1, child2);
-    }
-
-    drawTree(tree: KpiRecursive[], maxDepth: number) {
-        console.log(kpiTreeConfig.kpiTreeRecursive);
-
-        this.drawTreeLeaf(tree[0], tree[0], 0, maxDepth, this.offsetTop);
     }
 
     drawTreeLeaf(leaf: KpiRecursive, root: KpiRecursive, depth: number, maxDepth: number, topOffset: number) {
@@ -189,7 +204,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         div.setAttribute('data-toggle', "modal");
         div.setAttribute('data-target', "#modal");
 
-        div.addEventListener('mouseover', ($event) => this.kpiMouseOverListener($event));
+        // div.addEventListener('mouseover', ($event) => this.kpiMouseOverListener($event));
         div.addEventListener('click', ($event) => this.kpiClickListener($event, this));
 
         tree.appendChild(div);
@@ -200,7 +215,9 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         if (kpiTreeConfig.focusKpiId != null) {
             const divActive = document.getElementById('kpi-' + kpiTreeConfig.focusKpiId);
-            divActive.classList.remove('kpi-active');
+            if (divActive != null) {
+                divActive.classList.remove('kpi-active');
+            }
         }
 
         if (thisDiv.dataset.id != null) {
@@ -225,7 +242,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         const thisDiv = event.target;
 
         if (thisDiv.dataset.id != null) {
-            if (kpiTreeConfig.selectKpiId != null) {
+            if (kpiTreeConfig.selectKpiId != null && thisDiv.dataset.id != kpiTreeConfig.selectKpiId) {
                 highlightResetPathToRootByUid(kpiTreeConfig.selectKpiId);
             }
 
@@ -236,10 +253,6 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
                 highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
             }
         }
-    }
-
-    getSelectedKpi() {
-        return kpiTreeConfig.kpiTree.kpi.find(item => item.uid === kpiTreeConfig.selectKpiId);
     }
 
     onKpiTitleChange($event) {
@@ -255,10 +268,13 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
     }
 
     onSave() {
-        const div = document.getElementById('kpi-' + kpiTreeConfig.selectKpiId);
-        div.innerHTML = '';
-        div.innerHTML = `${this.selectedKpiChanges.title} ${this.selectedKpiChanges.symbol ? '(' + this.selectedKpiChanges.symbol + ')' : ''}`;
-        div.className = `kpi text-center ${this.selectedKpiChanges.style}`;
+        const kpi = this.getSelectedKpi();
+
+        kpi.title = this.selectedKpiChanges.title;
+        kpi.symbol = this.selectedKpiChanges.symbol;
+        kpi.style = this.selectedKpiChanges.style;
+
+        this.drawTree();
 
         this.kpiService.saveKpi(this.selectedKpiChanges, kpiTreeConfig.kpiTree.uid);
     }

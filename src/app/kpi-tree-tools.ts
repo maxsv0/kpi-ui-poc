@@ -7,6 +7,7 @@ export class KpiTreeConfig {
     lines = [];
     focusKpiId: any;
     selectKpiId: any;
+    kpiTreeIndex: any[] = [];
 }
 
 export function editEndListener(event) {
