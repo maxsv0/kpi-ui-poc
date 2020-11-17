@@ -1,7 +1,11 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {KpiTree} from "../model/kpi-tree";
 import {Kpi} from "../model/kpi";
-import {getRandomUUID, highlightPathToRootByUid, highlightResetPathToRootByUid, KpiTreeConfig} from "../kpi-tree-tools";
+import {
+    getRandomUUID, highlightKpiByUid,
+    highlightResetKpiByUid,
+    KpiTreeConfig
+} from "../kpi-tree-tools";
 import {KpiRecursive} from "../model/kpi-recursive";
 import {KpiService} from '../service/kpi.service';
 
@@ -137,7 +141,7 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
         this.drawTreeLeaf(kpiTreeConfig.kpiTreeRecursive[0], kpiTreeConfig.kpiTreeRecursive[0], 0, this.maxDepth, this.offsetTop);
 
         if (kpiTreeConfig.selectKpiId != null) {
-            highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
+            highlightKpiByUid(kpiTreeConfig.selectKpiId);
         }
     }
 
@@ -243,14 +247,14 @@ export class KpiTreePreviewComponent implements OnInit, OnDestroy {
 
         if (thisDiv.dataset.id != null) {
             if (kpiTreeConfig.selectKpiId != null && thisDiv.dataset.id != kpiTreeConfig.selectKpiId) {
-                highlightResetPathToRootByUid(kpiTreeConfig.selectKpiId);
+                highlightResetKpiByUid(kpiTreeConfig.selectKpiId);
             }
 
             if (thisDiv.dataset.id !== kpiTreeConfig.selectKpiId) {
                 kpiTreeConfig.selectKpiId = thisDiv.dataset.id;
                 self.selectedKpiChanges = { ...self.getSelectedKpi() };
 
-                highlightPathToRootByUid(kpiTreeConfig.selectKpiId);
+               highlightKpiByUid(kpiTreeConfig.selectKpiId);
             }
         }
     }

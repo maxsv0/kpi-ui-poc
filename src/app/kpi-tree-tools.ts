@@ -22,6 +22,18 @@ export function editEnableByUid(uid: string) {
 
 }
 
+export function highlightKpiByUid(uid: string) {
+    const div = document.getElementById('kpi-' + uid);
+
+    highlightKpi(div);
+}
+
+export function highlightResetKpiByUid(uid: string) {
+    const div = document.getElementById('kpi-' + uid);
+
+    highlightKpiReset(div);
+}
+
 export function highlightPathToRootByUid(uid: string) {
     const div = document.getElementById('kpi-' + uid);
 
@@ -71,11 +83,9 @@ export function getRandomUUID() {
 }
 
 function highlightKpi(element: HTMLElement) {
-    element.classList.remove('alert-primary');
-    element.classList.add('alert-warning');
+    element.classList.add('kpi-highlight');
 }
 
 function highlightKpiReset(element: HTMLElement) {
-    element.classList.remove('alert-warning');
-    element.classList.add('alert-primary');
+    element.classList.remove('kpi-highlight');
 }
